@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="SecurityEnvSDK-release-1.1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/SecurityEnvSDK-release-1.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-common-1.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-share-core-6.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-share-QQ-simplify-6.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-share-wechat-simplify-6.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-shareboard-widget-6.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/umeng-sharetool-6.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/utdid4all-1.1.5.3_proguard.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

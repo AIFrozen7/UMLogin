@@ -1,0 +1,111 @@
+https://blog.csdn.net/qq_42785994/article/details/84110806?tdsourcetag=s_pcqq_aiomsg
+1.拷贝demo中的libs文件夹和res文件夹;
+   右击 add as library
+2.Application添加如下代码：
+UMConfigure.init(this,"5c089159b465f59767000066","小米",UMConfigure.DEVICE_TYPE_PHONE,"");
+/**
+ * 设置组件化的Log开关
+ * 参数: boolean 默认为false，如需查看LOG设置为true
+ */
+UMConfigure.setLogEnabled(true);
+PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+3.AndroidManifest.xml清单文件里面增加：
+<application
+    android:name="com.dingtao.logindemo.core.DTApplication"
+--------------------
+<uses-permission android:name="android.permission.INTERNET"/>
+<!-- 必须的权限 -->
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+---------------------------
+<!--友盟QQ******开始-->
+<activity
+    android:name="com.tencent.tauth.AuthActivity"
+    android:launchMode="singleTask"
+    android:noHistory="true" >
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data android:scheme="tencent100424468" />
+    </intent-filter>
+</activity>
+<activity
+    android:name="com.tencent.connect.common.AssistActivity"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar"
+    android:configChanges="orientation|keyboardHidden|screenSize"/>
+<!--友盟QQ******结束-->
+-----------------------
+4.activity中先申请权限，然后重写onActivtyResult和onRequestPermissionsResult
+-----------------------
+if(Build.VERSION.SDK_INT>=23){//QQ需要申请写入权限
+    String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
+    ActivityCompat.requestPermissions(this,mPermissionList,123);
+}
+------------------------------------
+@Override
+public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode==123){
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.QQ, authListener);
+    }
+}
+-------------------------------------
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+}
+--------------------------------------
+UMAuthListener authListener = new UMAuthListener() {
+        /**
+         * @desc 授权开始的回调
+         * @param platform 平台名称
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @desc 授权成功的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param data 用户资料返回
+         */
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+
+            Toast.makeText(LoginActivity.this, "成功了", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(LoginActivity.this,ShopListActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        /**
+         * @desc 授权失败的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+
+            Toast.makeText(LoginActivity.this, "失败：" + t.getMessage(),                                  Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @desc 授权取消的回调
+         * @param platform 平台名称
+         * @param action 行为序号，开发者用不上
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText(LoginActivity.this, "取消了", Toast.LENGTH_LONG).show();
+        }
+    };
